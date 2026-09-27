@@ -8,7 +8,7 @@ crate-type = ["cdylib"]
 path = "src/entry_point.rs"
 
 [dependencies]
-hudhook = { git = "https://github.com/Fetch1337/hudhook.git", rev = "a4c37104a7976c34c2aa83b79176f1807a0f3a34" }
+hudhook = "0.9"
 anyhow = "1"
 libmem = "5.1"
 minhook-sys = "0.1"

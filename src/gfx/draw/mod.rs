@@ -462,22 +462,28 @@ impl PolygonCmd<'_, '_, '_> {
 
         let draw_outline = self.outline || !self.filled;
 
+        let mut points_vec = if self.closed && draw_outline {
+            let mut v = Vec::with_capacity(self.points.len() + 1);
+            v.extend_from_slice(self.points);
+            v
+        } else {
+            self.points.to_vec()
+        };
+
         if self.filled {
-            let points: Vec<[f32; 2]> = self.points.to_vec();
             if draw_outline {
-                dl.add_polyline(points.clone(), self.color)
+                dl.add_polyline(points_vec.clone(), self.color)
                     .filled(true)
                     .build();
             } else {
-                dl.add_polyline(points, self.color).filled(true).build();
+                dl.add_polyline(points_vec, self.color).filled(true).build();
                 return;
             }
         }
 
         if draw_outline {
-            let mut points: Vec<[f32; 2]> = self.points.to_vec();
             if self.closed {
-                points.push(self.points[0]);
+                points_vec.push(self.points[0]);
             }
             let color = self.outline_color.unwrap_or(if self.filled {
                 self.ctx.defaults.outline_color
@@ -489,7 +495,7 @@ impl PolygonCmd<'_, '_, '_> {
                 .or(self.thickness)
                 .unwrap_or(self.ctx.defaults.thickness);
 
-            dl.add_polyline(points, color)
+            dl.add_polyline(points_vec, color)
                 .filled(false)
                 .thickness(thick)
                 .build();

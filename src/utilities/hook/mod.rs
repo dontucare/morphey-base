@@ -111,9 +111,6 @@ pub fn eject() -> Result<()> {
             unsafe { minhook_sys::MH_DisableHook(hook.target) },
             obfstr::obfstr!("MH_DisableHook"),
         )?;
-    }
-
-    for hook in &hooks {
         ensure_ok(
             unsafe { minhook_sys::MH_RemoveHook(hook.target) },
             obfstr::obfstr!("MH_RemoveHook"),
